@@ -1,0 +1,94 @@
+<?php
+
+namespace Mediact\Smile\Block;
+
+use Magento\Framework\View\Element\Template;
+use Magento\Widget\Block\BlockInterface;
+use Magento\Customer\Model\Session;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+
+class Script
+    extends Template
+    implements BlockInterface
+{
+    /**
+     * @var Session
+     */
+    protected $customerSession;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * Script constructor.
+     *
+     * @param Session $customerSession
+     */
+    public function __construct(
+        \Magento\Catalog\Block\Product\Context $context,
+        Session $customerSession,
+        ScopeConfigInterface $scopeConfig,
+        array $data = []
+    ) {
+        $this->customerSession = $customerSession;
+        $this->scopeConfig = $scopeConfig;
+
+        parent::__construct($context, $data);
+    }
+
+    /**
+     * Check if the extension is enabled. If disabled, none of
+     * the API calls should be triggered.
+     *
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->scopeConfig->getValue(
+            'smile/settings/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getCustomerId()
+    {
+        return $this->customerSession->getCustomerId();
+    }
+
+    /**
+     * Get the private key from the Magento configuration.
+     * This key is required as authentication for the API
+     * calls to Smile.io
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        /** @var string $token */
+        $token = $this->scopeConfig->getValue(
+            'smile/settings/private_key',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $token;
+    }
+
+    /**
+     * Generate the customer authentication digest using
+     * the customer ID and the Smile.io token.
+     *
+     * @return string
+     */
+    public function getCustomerAuthDigest()
+    {
+        $customerId = $this->getCustomerId();
+        $token = $this->getToken();
+
+        $digest = md5($customerId . '#' . $token);
+
+        return $digest;
+    }
+}
