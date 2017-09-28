@@ -14,7 +14,7 @@ class Update
      *
      * @return string
      */
-    public function getEventCode()
+    public  function getEventCode()
     {
         return 'customer/updated';
     }

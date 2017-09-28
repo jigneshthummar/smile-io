@@ -90,9 +90,8 @@ abstract class ObserverAbstract
     }
 
     /**
-     * Not yet sure if this is the
+     * Log the response from Smile.io if available
      *
-     * @todo check if this method is required. We can only see that if we have a valid return.
      * @param array $response
      */
     protected function logResponse($response)
@@ -104,7 +103,12 @@ abstract class ObserverAbstract
                 break;
 
             default:
-                $this->debug($response['response']['error']['message'], $response['httpcode']);
+                if (isset($response['response']['error']) && isset($response['response']['error']['message'])) {
+                    $this->debug($response['response']['error']['message'], $response['httpcode']);
+                } else {
+                    $this->debug("An unknown error occured with HTTP code " . $response['httpcode'], $response['httpcode']);
+                }
+
                 break;
         }
     }
@@ -118,7 +122,7 @@ abstract class ObserverAbstract
      * documentation
      *
      * @see https://docs.smile.io/docs/errors
-     * @param string $message
+     * @param mixed $message
      * @param int $httpCode
      * @return $this
      */
@@ -128,14 +132,21 @@ abstract class ObserverAbstract
             return $this;
         }
 
+        $context = [];
+
+        if (!is_string($message)) {
+            $context = $message;
+            $message = "Debugging context";
+        }
+
         switch ($httpCode) {
             case 100:
-                $this->logger->debug($message);
+                $this->logger->debug($message, $context);
                 break;
 
             case 200:
             case 202:
-                $this->logger->info($message);
+                $this->logger->info($message, $context);
                 break;
 
             case 400:
@@ -143,11 +154,11 @@ abstract class ObserverAbstract
             case 402:
             case 404:
             case 429:
-                $this->logger->error($message);
+                $this->logger->error($message, $context);
                 break;
 
             case 500:
-                $this->logger->critical($message);
+                $this->logger->critical($message, $context);
                 break;
         }
 
@@ -190,17 +201,15 @@ abstract class ObserverAbstract
         $response = $this->curlAdapter->read();
         $headerCode = $this->curlAdapter->getInfo(CURLINFO_HTTP_CODE);
 
+//        $this->debug($response);
+//        $this->debug($headerCode);
+
         $this->curlAdapter->close();
 
         return [
             'httpcode' => $headerCode,
             'response' => !empty($response) ? $this->jsonHelper->jsonDecode($response) : ''
         ];
-    }
-
-    protected function parseHeaders($curl, $headers)
-    {
-        var_dump($headers); exit;
     }
 
     /**
