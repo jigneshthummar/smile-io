@@ -4,7 +4,7 @@ namespace Mediact\Smile\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Magento\Framework\HTTP\Adapter\Curl;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -42,7 +42,7 @@ abstract class ObserverAbstract
     protected $messageManager;
 
     public function __construct(
-        Logger $logger,
+        LoggerInterface $logger,
         Curl $curlAdapter,
         Data $jsonHelper,
         ScopeConfigInterface $scopeConfig,
@@ -99,7 +99,7 @@ abstract class ObserverAbstract
     {
         switch ($response['httpcode']) {
             case 200:
-                var_dump($response); exit;
+            case 202:
                 $this->debug('Everything worked as expected', 200);
                 break;
 
@@ -124,18 +124,18 @@ abstract class ObserverAbstract
      */
     protected function debug($message, $httpCode = 100)
     {
-//        if (!$this->scopeConfig->getValue('smile/settings/debug')) {
-//            return $this;
-//        }
+        if (!$this->scopeConfig->getValue('smile/settings/debug')) {
+            return $this;
+        }
 
         switch ($httpCode) {
             case 100:
-                $this->logger->addDebug($message);
+                $this->logger->debug($message);
                 break;
 
             case 200:
-                $this->logger->addInfo($message);
-
+            case 202:
+                $this->logger->info($message);
                 break;
 
             case 400:
@@ -143,12 +143,11 @@ abstract class ObserverAbstract
             case 402:
             case 404:
             case 429:
-                $this->logger->addError($message);
+                $this->logger->error($message);
                 break;
 
             case 500:
-                $this->logger->addCritical($message);
-
+                $this->logger->critical($message);
                 break;
         }
 
@@ -158,16 +157,18 @@ abstract class ObserverAbstract
     /**
      * Make the actual API call to Smile.io.
      *
-     * @param string $event
-     * @param array $body
+     * @param string $trigger
+     * @param array $data
      * @return array
      */
-    protected function call($event, $body)
+    protected function call($trigger, $data)
     {
         /** @var array $body */
         $body = [
-            'event' => $event,
-            'body' => $body
+            'event' => [
+                'topic' => $trigger,
+                'data' => $data
+            ]
         ];
 
         /** @var array $headers */
@@ -193,7 +194,7 @@ abstract class ObserverAbstract
 
         return [
             'httpcode' => $headerCode,
-            'response' => $this->jsonHelper->jsonDecode($response)
+            'response' => !empty($response) ? $this->jsonHelper->jsonDecode($response) : ''
         ];
     }
 
