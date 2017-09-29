@@ -5,7 +5,6 @@ namespace Mediact\Smile\Block;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
 class Script
@@ -30,7 +29,6 @@ class Script
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         Session $customerSession,
-        ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
@@ -47,7 +45,7 @@ class Script
      */
     public function isEnabled()
     {
-        return $this->scopeConfig->getValue(
+        return $this->_scopeConfig->getValue(
             'smile/settings/enabled',
             ScopeInterface::SCOPE_STORE
         );
@@ -68,7 +66,7 @@ class Script
     public function getToken()
     {
         /** @var string $token */
-        $token = $this->scopeConfig->getValue(
+        $token = $this->_scopeConfig->getValue(
             'smile/settings/private_key',
             ScopeInterface::SCOPE_STORE
         );
