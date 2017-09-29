@@ -17,11 +17,6 @@ class Script
     protected $customerSession;
 
     /**
-     * @var ScopeConfigInterface
-     */
-    protected $scopeConfig;
-
-    /**
      * Script constructor.
      *
      * @param Session $customerSession
@@ -32,7 +27,6 @@ class Script
         array $data = []
     ) {
         $this->customerSession = $customerSession;
-        $this->scopeConfig = $scopeConfig;
 
         parent::__construct($context, $data);
     }
@@ -51,6 +45,11 @@ class Script
         );
     }
 
+    /**
+     * Get the current customer ID
+     *
+     * @return mixed
+     */
     public function getCustomerId()
     {
         return $this->customerSession->getCustomerId();
