@@ -39,6 +39,8 @@ class Api
     }
 
     /**
+     * Synchronise the customer to Smile.io.
+     *
      * @param array $data
      *
      * @return boolean
@@ -51,6 +53,8 @@ class Api
     }
 
     /**
+     * Synchronise the order to Smile.io.
+     *
      * @param array $data
      *
      * @return boolean
@@ -63,6 +67,9 @@ class Api
     }
 
     /**
+     * Make the call to the Smile.io API URL and sync the content send to this
+     * method.
+     *
      * @param $headers
      * @param $content
      *
@@ -80,15 +87,16 @@ class Api
             $this->jsonHelper->serialize($content)
         );
 
-        $response = $this->curlAdapter->read();
         $headerCode = $this->curlAdapter->getInfo(CURLINFO_HTTP_CODE);
 
         $this->curlAdapter->close();
 
-        return $headerCode >= 200 && $headerCode <= 202;
+        return (int) $headerCode == 202;
     }
 
     /**
+     * Generate an array containing the headers that are required by the Smile.io
+     * API.
      *
      * @return array
      */
@@ -101,8 +109,9 @@ class Api
     }
 
     /**
+     * Get the private key, used as the token, from the Magento configuration.
      *
-     * @return mixed
+     * @return string
      */
     private function getToken(): string
     {
@@ -113,8 +122,11 @@ class Api
     }
 
     /**
-     * @param $trigger
-     * @param $data
+     * Generate the body for the API call to Smile.io, based on the given
+     * data by the customer or order synchronisation script.
+     *
+     * @param string $trigger
+     * @param array $data
      *
      * @return array
      */

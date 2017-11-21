@@ -17,7 +17,7 @@ use Zend_Db_Expr;
 use function date;
 
 /**
- * Class Customer
+ * Class OrderSync
  */
 class OrderSync
 {
@@ -60,6 +60,7 @@ class OrderSync
     }
 
     /**
+     * Get the Smile.io API model.
      *
      * @return Api
      */
@@ -69,6 +70,8 @@ class OrderSync
     }
 
     /**
+     * Update the order collection to Smile.io. Only orders that are updated
+     * since the last synchronisation with Smile.io will be processed.
      *
      * @return void
      */
@@ -113,6 +116,8 @@ class OrderSync
     }
 
     /**
+     * Get a collection of the orders that are updated after they're last
+     * synced with Smile.io.
      *
      * @return Collection
      */
@@ -132,12 +137,15 @@ class OrderSync
 
 
     /**
+     * Load the customer based on the customer_id of the current order.
+     *
      * @param $customerId
      *
      * @return CustomerInterface
      */
-    private function getCustomer($customerId)
+    private function getCustomer($customerId): CustomerInterface
     {
+        /** @var CustomerInterface $customer */
         $customer = $this->customerRepository->getById($customerId);
 
         return $customer;
@@ -152,7 +160,7 @@ class OrderSync
      * @param Order $order
      * @return array
      */
-    private function getCouponCodes($order)
+    private function getCouponCodes($order): array
     {
         $couponCode = $order->getCouponCode();
 
@@ -164,38 +172,25 @@ class OrderSync
     }
 
     /**
+     * Get the payment status used in Smile.io of the order based on the
+     * grand, invoiced and refunded total. If an order is completely invoiced,
+     * the status is paid. If the entire order is fully refunded, the status is
+     * refunded.
+     *
      * @param Order $order
      *
-     * @return string
+     * @return null|string
      */
     private function getOrderPaymentStatus($order)
     {
-        /**
-         * If the invoiced total is the same as the grand total, the entire
-         * order is paid.
-         */
         if ((float) $order->getTotalInvoiced() === (float) $order->getGrandTotal()) {
             return 'paid';
         }
 
-        /**
-         * If the refunded total is the same as the grand total, the entire
-         * order is refunded.
-         */
         if ((float) $order->getTotalRefunded() === (float) $order->getGrandTotal()) {
             return 'refunded';
         }
 
         return null;
-    }
-
-    /**
-     * @param $order
-     *
-     * @return void
-     */
-    private function getRefundedTotal($order)
-    {
-
     }
 }

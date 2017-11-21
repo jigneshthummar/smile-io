@@ -14,7 +14,7 @@ use Zend_Db_Expr;
 use function date;
 
 /**
- * Class Customer
+ * Class CustomerSync
  */
 class CustomerSync
 {
@@ -52,6 +52,7 @@ class CustomerSync
     }
 
     /**
+     * Get the Smile.io API model.
      *
      * @return Api
      */
@@ -61,6 +62,8 @@ class CustomerSync
     }
 
     /**
+     * Update the customer collection to Smile.io. Only customers that are updated
+     * since the last synchronisation with Smile.io will be processed.
      *
      * @return void
      */
@@ -97,6 +100,8 @@ class CustomerSync
     }
 
     /**
+     * Get a collection of the customers that are updated after they're last
+     * synced with Smile.io.
      *
      * @return Collection
      */
