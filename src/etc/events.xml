@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-	<event name="customer_save_after">
-		<observer instance="Mediact\Smile\Observer\Customer\Update" name="mediact_smile_customer_update"/>
-	</event>
-	<event name="checkout_submit_all_after">
-		<observer instance="Mediact\Smile\Observer\Order\Update" name="mediact_smile_order_update"/>
-	</event>
-</config>
