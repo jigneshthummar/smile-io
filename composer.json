@@ -4,14 +4,13 @@
     "license": "proprietary",
     "type": "magento2-module",
     "require": {
-        "php": "~5.6.0|~7.0.2|~7.1.0",
+        "php": "~7.0.2|~7.1.0",
         "magento/magento-composer-installer": "*",
-        "magento/customer": "^100.1.0|^101.0.0",
+        "magento/module-customer": "^100.1.0|^101.0.0",
         "magento/framework": "^100.1.0|^101.0.0",
-        "magento/sales": "^100.1.0|^101.0.0",
-        "magento/session": "^100.1.0|^101.0.0",
-        "magento/store": "^100.1.0|^101.0.0",
-        "magento/widget": "^100.1.0|^101.0.0"
+        "magento/module-sales": "^100.1.0|^101.0.0",
+        "magento/module-store": "^100.1.0|^101.0.0",
+        "magento/module-widget": "^100.1.0|^101.0.0"
     },
     "minimum-stability": "stable",
     "authors": [
