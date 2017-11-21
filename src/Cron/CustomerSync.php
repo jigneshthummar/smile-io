@@ -87,14 +87,6 @@ class CustomerSync
                 /** @todo This should be fixed using service contracts */
                 $customer->setData('smileio_synchronised_at', date('Y-m-d H:i:s'));
                 $customer->save();
-
-                //$customerData = $customer->getDataModel();
-                //$customerResource = $this->customerFactory->create();
-                //
-                //$customerData->setCustomAttribute();
-                //$customer->updateData($customerData);
-                //
-                //$customerResource->saveAttribute($customer, 'smileio_synchronised_at');
             }
         }
     }
