@@ -16,8 +16,13 @@ class Api
 {
     const API_EVENT_URL = 'https://api.sweettooth.io/v1/events';
 
+    /** @var ScopeConfigInterface  */
     private $scopeConfig;
+
+    /** @var Curl  */
     private $curlAdapter;
+
+    /** @var Json  */
     private $jsonHelper;
 
     /**
@@ -31,8 +36,7 @@ class Api
         ScopeConfigInterface $scopeConfig,
         Curl $curlAdapter,
         Json $jsonHelper
-    )
-    {
+    ) {
         $this->scopeConfig = $scopeConfig;
         $this->curlAdapter = $curlAdapter;
         $this->jsonHelper = $jsonHelper;
@@ -49,6 +53,8 @@ class Api
     {
         $headers = $this->getHeaders();
         $content = $this->generateBody('customer/updated', $data);
+        var_dump($headers);
+        var_dump($content);
         return $this->call($headers, $content);
     }
 
@@ -70,15 +76,14 @@ class Api
      * Make the call to the Smile.io API URL and sync the content send to this
      * method.
      *
-     * @param $headers
-     * @param $content
+     * @param array $headers
+     * @param array $content
      *
      * @return boolean
      */
     private function call($headers, $content)
     {
         // Make sure we only receive the body of the response
-        $this->curlAdapter->setConfig(['header' => '']);
         $this->curlAdapter->write(
             'POST',
             self::API_EVENT_URL,
@@ -87,11 +92,11 @@ class Api
             $this->jsonHelper->serialize($content)
         );
 
+        $this->curlAdapter->read();
         $headerCode = $this->curlAdapter->getInfo(CURLINFO_HTTP_CODE);
-
         $this->curlAdapter->close();
 
-        return (int) $headerCode == 202;
+        return (int) $headerCode === 202;
     }
 
     /**
@@ -113,7 +118,7 @@ class Api
      *
      * @return string
      */
-    private function getToken(): string
+    private function getToken()
     {
         return $this->scopeConfig->getValue(
             'smile/settings/private_key',

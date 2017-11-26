@@ -2,27 +2,34 @@
 
 namespace Mediact\Smile\Block;
 
+use Magento\Catalog\Block\Product\Context;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 use Magento\Customer\Model\Session;
 use Magento\Store\Model\ScopeInterface;
 
-class Script
-    extends Template
-    implements BlockInterface
+/**
+ * Class Script
+ *
+ * @package Mediact\Smile\Block
+ */
+class Script extends Template implements BlockInterface
 {
     /**
      * @var Session
      */
     protected $customerSession;
 
+
     /**
-     * Script constructor.
+     * Constructor.
      *
+     * @param Context $context
      * @param Session $customerSession
+     * @param array   $data
      */
     public function __construct(
-        \Magento\Catalog\Block\Product\Context $context,
+        Context $context,
         Session $customerSession,
         array $data = []
     ) {

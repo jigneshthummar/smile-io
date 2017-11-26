@@ -4,9 +4,8 @@ namespace Mediact\Smile\Cron;
 
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
-use Magento\Customer\Model\ResourceModel\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Customer;
-use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Mediact\Smile\Model\Api;
 use Psr\Log\LoggerInterface;
 use Zend_Db_Expr;
@@ -24,30 +23,30 @@ class CustomerSync
     /** @var CollectionFactory */
     private $customerCollection;
 
-    /** @var CustomerFactory */
-    private $customerFactory;
+    /** @var CustomerResource */
+    private $customerResource;
 
     /** @var Api */
     private $apiModel;
 
+
     /**
      * Constructor.
      *
-     * @param LoggerInterface    $logger
-     * @param CollectionFactory  $customerCollection
-     * @param CustomerRepository $customerRepository
-     * @param Api                $apiModel
+     * @param LoggerInterface   $logger
+     * @param CollectionFactory $customerCollection
+     * @param CustomerResource  $customerResource
+     * @param Api               $apiModel
      */
     public function __construct(
         LoggerInterface $logger,
         CollectionFactory $customerCollection,
-        CustomerFactory $customerFactory,
+        CustomerResource $customerResource,
         Api $apiModel
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->customerCollection = $customerCollection;
-        $this->customerFactory = $customerFactory;
+        $this->customerResource = $customerResource;
         $this->apiModel = $apiModel;
     }
 
@@ -84,9 +83,13 @@ class CustomerSync
             ];
 
             if ($this->getApi()->synchroniseCustomer($data)) {
-                /** @todo This should be fixed using service contracts */
-                $customer->setData('smileio_synchronised_at', date('Y-m-d H:i:s'));
-                $customer->save();
+                $this->customerResource->getConnection()->update(
+                    $this->customerResource->getTable('customer_entity'),
+                    [
+                        'smileio_synchronised_at' => date('Y-m-d H:i:s')
+                    ],
+                    $this->customerResource->getConnection()->quoteInto('entity_id = ?', $customer->getId())
+                );
             }
         }
     }

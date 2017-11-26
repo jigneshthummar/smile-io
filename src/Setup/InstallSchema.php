@@ -12,8 +12,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
  *
  * @package Mediact\Smile\Setup
  */
-class InstallSchema
-    implements InstallSchemaInterface
+class InstallSchema implements InstallSchemaInterface
 {
     /**
      * Add column to the customer and order table for Smile.io
@@ -27,8 +26,7 @@ class InstallSchema
     public function install(
         SchemaSetupInterface $setup,
         ModuleContextInterface $context
-    )
-    {
+    ) {
         $setup->startSetup();
 
         /** @var string $table */

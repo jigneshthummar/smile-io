@@ -3,14 +3,29 @@
     "description": "Magento 2 Extension for Smile.io integration",
     "license": "proprietary",
     "type": "magento2-module",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "composer",
+            "url": "https://composer.mediact.nl"
+        }
+    ],
     "require": {
         "php": "~7.0.2|~7.1.0",
         "magento/magento-composer-installer": "*",
-        "magento/module-customer": "^100.1.0|^101.0.0",
         "magento/framework": "^100.1.0|^101.0.0",
+        "magento/module-customer": "^100.1.0|^101.0.0",
         "magento/module-sales": "^100.1.0|^101.0.0",
         "magento/module-store": "^100.1.0|^101.0.0",
-        "magento/module-widget": "^100.1.0|^101.0.0"
+        "magento/module-widget": "^100.1.0|^101.0.0",
+        "magento/zendframework1": "~1.12.16"
+    },
+    "require-dev": {
+        "mediact/testing-suite": "^1.6",
+        "mediact/coding-standard-magento2": "@stable"
     },
     "minimum-stability": "stable",
     "authors": [
@@ -30,5 +45,18 @@
         "psr-4": {
             "Mediact\\Smile\\": "src/"
         }
+    },
+    "extra": {
+        "grumphp": {
+            "config-default-path": "vendor/mediact/testing-suite/config/default/grumphp.yml"
+        }
+    },
+    "archive": {
+        "exclude": [
+            "/phpunit.xml",
+            "/phpmd.xml",
+            "/phpstan.neon",
+            "/phpcs.xml"
+        ]
     }
 }

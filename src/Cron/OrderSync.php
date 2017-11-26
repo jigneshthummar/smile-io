@@ -4,12 +4,10 @@ namespace Mediact\Smile\Cron;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Model\Customer;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
-use Magento\Sales\Model\ResourceModel\OrderFactory;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\ResourceModel\OrderRepository;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Mediact\Smile\Model\Api;
 use Psr\Log\LoggerInterface;
 use Zend_Db_Expr;
@@ -27,34 +25,34 @@ class OrderSync
     /** @var CollectionFactory */
     private $orderCollection;
 
-    /** @var OrderFactory */
-    private $orderFactory;
-
     /** @var Api */
     private $apiModel;
 
     /** @var CustomerRepositoryInterface */
     private $customerRepository;
 
+    /** @var OrderResource */
+    private $orderResource;
+
     /**
      * Constructor.
      *
-     * @param LoggerInterface   $logger
-     * @param CollectionFactory $orderCollection
-     * @param OrderFactory      $orderFactory
-     * @param Api               $apiModel
+     * @param LoggerInterface             $logger
+     * @param CollectionFactory           $orderCollection
+     * @param OrderResource               $orderResource
+     * @param Api                         $apiModel
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         LoggerInterface $logger,
         CollectionFactory $orderCollection,
-        OrderFactory $orderFactory,
+        OrderResource $orderResource,
         Api $apiModel,
         CustomerRepositoryInterface $customerRepository
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->orderCollection = $orderCollection;
-        $this->orderFactory = $orderFactory;
+        $this->orderResource = $orderResource;
         $this->apiModel = $apiModel;
         $this->customerRepository = $customerRepository;
     }
@@ -108,9 +106,13 @@ class OrderSync
             ];
 
             if ($this->getApi()->synchroniseOrder($data)) {
-                /** @todo This should be fixed using service contracts */
-                $order->setData('smileio_synchronised_at', date('Y-m-d H:i:s'));
-                $order->save();
+                $this->orderResource->getConnection()->update(
+                    $this->orderResource->getTable('sales_order'),
+                    [
+                        'smileio_synchronised_at' => date('Y-m-d H:i:s')
+                    ],
+                    $this->orderResource->getConnection()->quoteInto('entity_id = ?', $order->getId())
+                );
             }
         }
     }
@@ -139,7 +141,7 @@ class OrderSync
     /**
      * Load the customer based on the customer_id of the current order.
      *
-     * @param $customerId
+     * @param integer $customerId
      *
      * @return CustomerInterface
      */
@@ -158,6 +160,7 @@ class OrderSync
      * don't need a loop here.
      *
      * @param Order $order
+     *
      * @return array
      */
     private function getCouponCodes($order): array
@@ -183,11 +186,11 @@ class OrderSync
      */
     private function getOrderPaymentStatus($order)
     {
-        if ((float) $order->getTotalInvoiced() === (float) $order->getGrandTotal()) {
+        if ((float) $order->getTotalInvoiced() === $order->getGrandTotal()) {
             return 'paid';
         }
 
-        if ((float) $order->getTotalRefunded() === (float) $order->getGrandTotal()) {
+        if ((float) $order->getTotalRefunded() === $order->getGrandTotal()) {
             return 'refunded';
         }
 

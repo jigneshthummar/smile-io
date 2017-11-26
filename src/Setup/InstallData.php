@@ -9,8 +9,7 @@ use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
-class InstallData
-    implements InstallDataInterface
+class InstallData implements InstallDataInterface
 {
     /**
      * Customer setup factory
@@ -19,10 +18,14 @@ class InstallData
      */
     private $customerSetupFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param CustomerSetupFactory $customerSetupFactory
+     */
     public function __construct(
         CustomerSetupFactory $customerSetupFactory
-    )
-    {
+    ) {
         $this->customerSetupFactory = $customerSetupFactory;
     }
 
