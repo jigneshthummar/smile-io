@@ -53,8 +53,7 @@ class Api
     {
         $headers = $this->getHeaders();
         $content = $this->generateBody('customer/updated', $data);
-        var_dump($headers);
-        var_dump($content);
+        
         return $this->call($headers, $content);
     }
 
