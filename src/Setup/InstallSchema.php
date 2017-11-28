@@ -9,8 +9,6 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
  * Class InstallSchema
- *
- * @package Mediact\Smile\Setup
  */
 class InstallSchema implements InstallSchemaInterface
 {

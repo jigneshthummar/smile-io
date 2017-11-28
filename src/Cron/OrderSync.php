@@ -62,7 +62,7 @@ class OrderSync
      *
      * @return Api
      */
-    private function getApi()
+    private function getApi(): Api
     {
         return $this->apiModel;
     }
@@ -163,7 +163,7 @@ class OrderSync
      *
      * @return array
      */
-    private function getCouponCodes($order): array
+    private function getCouponCodes(Order $order): array
     {
         $couponCode = $order->getCouponCode();
 
@@ -184,7 +184,7 @@ class OrderSync
      *
      * @return null|string
      */
-    private function getOrderPaymentStatus($order)
+    private function getOrderPaymentStatus(Order $order)
     {
         if ((float) $order->getTotalInvoiced() === $order->getGrandTotal()) {
             return 'paid';

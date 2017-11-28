@@ -55,7 +55,7 @@ class CustomerSync
      *
      * @return Api
      */
-    private function getApi()
+    private function getApi(): Api
     {
         return $this->apiModel;
     }

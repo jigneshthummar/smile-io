@@ -9,8 +9,6 @@ use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Api
- *
- * @package Mediact\Smile\Model
  */
 class Api
 {
@@ -51,10 +49,9 @@ class Api
      */
     public function synchroniseCustomer(array $data)
     {
-        $headers = $this->getHeaders();
         $content = $this->generateBody('customer/updated', $data);
-        
-        return $this->call($headers, $content);
+
+        return $this->call($content);
     }
 
     /**
@@ -75,13 +72,14 @@ class Api
      * Make the call to the Smile.io API URL and sync the content send to this
      * method.
      *
-     * @param array $headers
      * @param array $content
      *
      * @return boolean
      */
-    private function call($headers, $content)
+    private function call($content)
     {
+        $headers = $this->getHeaders();
+
         // Make sure we only receive the body of the response
         $this->curlAdapter->write(
             'POST',
