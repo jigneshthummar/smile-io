@@ -61,7 +61,7 @@ class Api
      *
      * @return boolean
      */
-    public function synchroniseOrder(array $data)
+    public function synchroniseOrder($data)
     {
         $headers = $this->getHeaders();
         $content = $this->generateBody('order/updated', $data);
