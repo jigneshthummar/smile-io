@@ -94,7 +94,7 @@ class OrderSync
                 "external_created_at" => $order->getCreatedAt(),
                 "external_updated_at" => $order->getUpdatedAt(),
                 "payment_status" => $this->getOrderPaymentStatus($order),
-                "coupons" => $this->getCouponCodes($order),
+                "coupons" => $this->getCouponCode($order),
                 "customer" => [
                     "external_id" => $customer->getId(),
                     "first_name" => $customer->getFirstname(),
@@ -109,7 +109,8 @@ class OrderSync
                 $this->orderResource->getConnection()->update(
                     $this->orderResource->getTable('sales_order'),
                     ['smileio_synchronised_at' => date('Y-m-d H:i:s')],
-                    $this->orderResource->getConnection()->quoteInto('entity_id = ?', $order->getId())
+                    $this->orderResource->getConnection()
+                        ->quoteInto('entity_id = ?', $order->getId())
                 );
             }
         }
@@ -152,7 +153,7 @@ class OrderSync
     }
 
     /**
-     * Fetch the used coupon codes. Smile.io has the possibility
+     * Fetch the used coupon code. Smile.io has the possibility
      * to support several coupon codes per order, but since
      * Magento only supports one coupon code per order, we
      * don't need a loop here.
@@ -161,7 +162,7 @@ class OrderSync
      *
      * @return array
      */
-    private function getCouponCodes(Order $order): array
+    private function getCouponCode(Order $order): array
     {
         $couponCode = $order->getCouponCode();
 
@@ -180,9 +181,9 @@ class OrderSync
      *
      * @param Order $order
      *
-     * @return null|string
+     * @return mixed
      */
-    private function getOrderPaymentStatus(Order $order)
+    private function getOrderPaymentStatus(Order $order): mixed
     {
         if ((float) $order->getTotalInvoiced() === $order->getGrandTotal()) {
             return 'paid';

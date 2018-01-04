@@ -38,9 +38,9 @@ class Script extends Template implements BlockInterface
      * Check if the extension is enabled. If disabled, none of
      * the API calls should be triggered.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->_scopeConfig->getValue(
             'smile/settings/enabled',
@@ -53,7 +53,7 @@ class Script extends Template implements BlockInterface
      *
      * @return mixed
      */
-    public function getCustomerId()
+    public function getCustomerId(): mixed
     {
         return $this->customerSession->getCustomerId();
     }
@@ -65,7 +65,7 @@ class Script extends Template implements BlockInterface
      *
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         /** @var string $token */
         $token = $this->_scopeConfig->getValue(
@@ -82,7 +82,7 @@ class Script extends Template implements BlockInterface
      *
      * @return string
      */
-    public function getCustomerAuthDigest()
+    public function getCustomerAuthDigest(): string
     {
         $customerId = $this->getCustomerId();
         $token = $this->getToken();

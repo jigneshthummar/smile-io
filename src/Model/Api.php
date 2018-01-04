@@ -14,13 +14,13 @@ class Api
 {
     const API_EVENT_URL = 'https://api.sweettooth.io/v1/events';
 
-    /** @var ScopeConfigInterface  */
+    /** @var ScopeConfigInterface */
     private $scopeConfig;
 
-    /** @var Curl  */
+    /** @var Curl */
     private $curlAdapter;
 
-    /** @var Json  */
+    /** @var Json */
     private $jsonHelper;
 
     /**
@@ -45,9 +45,9 @@ class Api
      *
      * @param array $data
      *
-     * @return boolean
+     * @return bool
      */
-    public function synchroniseCustomer(array $data)
+    public function synchroniseCustomer(array $data): bool
     {
         $content = $this->generateBody('customer/updated', $data);
 
@@ -59,9 +59,9 @@ class Api
      *
      * @param array $data
      *
-     * @return boolean
+     * @return bool
      */
-    public function synchroniseOrder($data)
+    public function synchroniseOrder($data): bool
     {
         $content = $this->generateBody('order/updated', $data);
 
@@ -74,9 +74,9 @@ class Api
      *
      * @param array $content
      *
-     * @return boolean
+     * @return bool
      */
-    private function call($content)
+    private function call(array $content): bool
     {
         $headers = $this->getHeaders();
 
@@ -115,7 +115,7 @@ class Api
      *
      * @return string
      */
-    private function getToken()
+    private function getToken(): string
     {
         return $this->scopeConfig->getValue(
             'smile/settings/private_key',
@@ -132,7 +132,7 @@ class Api
      *
      * @return array
      */
-    private function generateBody($trigger, $data): array
+    private function generateBody(string $trigger, array $data): array
     {
         return [
             'event' => [

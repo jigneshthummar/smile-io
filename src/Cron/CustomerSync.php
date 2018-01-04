@@ -6,6 +6,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Mediact\Smile\Model\Api;
 use Psr\Log\LoggerInterface;
 use Zend_Db_Expr;
@@ -28,7 +29,6 @@ class CustomerSync
 
     /** @var Api */
     private $apiModel;
-
 
     /**
      * Constructor.
@@ -85,10 +85,9 @@ class CustomerSync
             if ($this->getApi()->synchroniseCustomer($data)) {
                 $this->customerResource->getConnection()->update(
                     $this->customerResource->getTable('customer_entity'),
-                    [
-                        'smileio_synchronised_at' => date('Y-m-d H:i:s')
-                    ],
-                    $this->customerResource->getConnection()->quoteInto('entity_id = ?', $customer->getId())
+                    ['smileio_synchronised_at' => date('Y-m-d H:i:s')],
+                    $this->customerResource->getConnection()
+                        ->quoteInto('entity_id = ?', $customer->getId())
                 );
             }
         }
