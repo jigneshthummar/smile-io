@@ -2,10 +2,10 @@
 
 namespace Mediact\Smile\Cron;
 
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
-use Magento\Customer\Model\Customer;
 use Mediact\Smile\Model\Api;
 use Psr\Log\LoggerInterface;
 use Zend_Db_Expr;
@@ -71,7 +71,7 @@ class CustomerSync
         /** @var CollectionFactory $collection */
         $collection = $this->getCustomerCollection();
 
-        /** @var Customer $customer */
+        /** @var CustomerInterface $customer */
         foreach ($collection as $customer) {
             $data = [
                 "external_id" => $customer->getId(),

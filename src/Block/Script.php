@@ -10,14 +10,10 @@ use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Script
- *
- * @package Mediact\Smile\Block
  */
 class Script extends Template implements BlockInterface
 {
-    /**
-     * @var Session
-     */
+    /** @var Session */
     protected $customerSession;
 
 

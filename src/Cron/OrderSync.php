@@ -108,9 +108,7 @@ class OrderSync
             if ($this->getApi()->synchroniseOrder($data)) {
                 $this->orderResource->getConnection()->update(
                     $this->orderResource->getTable('sales_order'),
-                    [
-                        'smileio_synchronised_at' => date('Y-m-d H:i:s')
-                    ],
+                    ['smileio_synchronised_at' => date('Y-m-d H:i:s')],
                     $this->orderResource->getConnection()->quoteInto('entity_id = ?', $order->getId())
                 );
             }

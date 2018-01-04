@@ -15,17 +15,12 @@
     ],
     "require": {
         "php": "~7.0.2|~7.1.0",
-        "magento/magento-composer-installer": "*",
         "magento/framework": "^100.1.0|^101.0.0",
         "magento/module-customer": "^100.1.0|^101.0.0",
         "magento/module-sales": "^100.1.0|^101.0.0",
-        "magento/module-store": "^100.1.0|^101.0.0",
+        "magento/module-store": "~100.1.0|~100.2.0",
         "magento/module-widget": "^100.1.0|^101.0.0",
-        "magento/zendframework1": "~1.12.16"
-    },
-    "require-dev": {
-        "mediact/testing-suite": "^1.6",
-        "mediact/coding-standard-magento2": "@stable"
+        "magento/zendframework1": "~1.13.0"
     },
     "minimum-stability": "stable",
     "authors": [
@@ -58,5 +53,9 @@
             "/phpstan.neon",
             "/phpcs.xml"
         ]
+    },
+    "require-dev": {
+        "mediact/testing-suite": "^1.7",
+        "mediact/coding-standard-magento2": "@stable"
     }
 }

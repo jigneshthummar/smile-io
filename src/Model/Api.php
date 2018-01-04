@@ -63,9 +63,9 @@ class Api
      */
     public function synchroniseOrder($data)
     {
-        $headers = $this->getHeaders();
         $content = $this->generateBody('order/updated', $data);
-        return $this->call($headers, $content);
+
+        return $this->call($content);
     }
 
     /**
