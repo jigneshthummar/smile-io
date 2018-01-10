@@ -3,10 +3,9 @@
 namespace Mediact\Smile\Cron;
 
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Customer\Model\ResourceModel\Customer\Collection;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
+use Magento\Customer\Model\ResourceModel\Customer\Collection as CustomerCollection;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
-use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Mediact\Smile\Model\Api;
 use Psr\Log\LoggerInterface;
 use Zend_Db_Expr;
@@ -21,8 +20,8 @@ class CustomerSync
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var CollectionFactory */
-    private $customerCollection;
+    /** @var CustomerFactory */
+    private $customerFactory;
 
     /** @var CustomerResource */
     private $customerResource;
@@ -34,18 +33,18 @@ class CustomerSync
      * Constructor.
      *
      * @param LoggerInterface   $logger
-     * @param CollectionFactory $customerCollection
+     * @param CustomerFactory   $customerFactory
      * @param CustomerResource  $customerResource
      * @param Api               $apiModel
      */
     public function __construct(
         LoggerInterface $logger,
-        CollectionFactory $customerCollection,
+        CustomerFactory $customerFactory,
         CustomerResource $customerResource,
         Api $apiModel
     ) {
         $this->logger = $logger;
-        $this->customerCollection = $customerCollection;
+        $this->customerFactory = $customerFactory;
         $this->customerResource = $customerResource;
         $this->apiModel = $apiModel;
     }
@@ -68,7 +67,7 @@ class CustomerSync
      */
     public function update()
     {
-        /** @var CollectionFactory $collection */
+        /** @var CustomerFactory $collection */
         $collection = $this->getCustomerCollection();
 
         /** @var CustomerInterface $customer */
@@ -82,7 +81,7 @@ class CustomerSync
                 "external_updated_at" => $customer->getUpdatedAt(),
             ];
 
-            if ($this->getApi()->synchroniseCustomer($data)) {
+            if ($this->getApi()->synchronizeCustomer($data)) {
                 $this->customerResource->getConnection()->update(
                     $this->customerResource->getTable('customer_entity'),
                     ['smileio_synchronised_at' => date('Y-m-d H:i:s')],
@@ -97,11 +96,11 @@ class CustomerSync
      * Get a collection of the customers that are updated after they're last
      * synced with Smile.io.
      *
-     * @return Collection
+     * @return CustomerCollection
      */
-    private function getCustomerCollection(): Collection
+    private function getCustomerCollection(): CustomerCollection
     {
-        $collection = $this->customerCollection->create();
+        $collection = $this->customerFactory->create();
         $collection->addFieldToFilter(
             'smileio_synchronised_at',
             [

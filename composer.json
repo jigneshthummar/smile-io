@@ -1,7 +1,7 @@
 {
     "name": "mediact/module-smile-io",
     "description": "Magento 2 Extension for Smile.io integration",
-    "license": "proprietary",
+    "license": "MIT",
     "type": "magento2-module",
     "repositories": [
         {
@@ -22,6 +22,7 @@
         "magento/module-widget": "^100.1.0|^101.0.0",
         "magento/zendframework1": "~1.13.0"
     },
+    "prefer-stable": true,
     "minimum-stability": "stable",
     "authors": [
         {

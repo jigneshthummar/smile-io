@@ -2,8 +2,8 @@
 
 namespace Mediact\Smile\Block;
 
-use Magento\Catalog\Block\Product\Context;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Magento\Widget\Block\BlockInterface;
 use Magento\Customer\Model\Session;
 use Magento\Store\Model\ScopeInterface;
@@ -15,7 +15,6 @@ class Script extends Template implements BlockInterface
 {
     /** @var Session */
     protected $customerSession;
-
 
     /**
      * Constructor.

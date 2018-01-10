@@ -1,9 +1,14 @@
 <?php
+
 /**
  * Show the Smile.io widget on the frontend. Since the widget should
  * only be shown when the extension is enabled and when the customer
  * is actually logged in, we do two checks before showing the code.
  */
+
+use Mediact\Smile\Block\Script;
+
+/** @var Script $block */
 ?>
 <?php if ($block->isEnabled() && $block->getCustomerId()): ?>
     <script async src="//cdn.sweettooth.io/assets/storefront.js" charset="utf-8"></script>

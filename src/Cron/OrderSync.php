@@ -4,8 +4,8 @@ namespace Mediact\Smile\Cron;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
-use Magento\Sales\Model\ResourceModel\Order\Collection;
-use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Mediact\Smile\Model\Api;
@@ -22,8 +22,8 @@ class OrderSync
     /** @var LoggerInterface */
     private $logger;
 
-    /** @var CollectionFactory */
-    private $orderCollection;
+    /** @var OrderFactory */
+    private $orderFactory;
 
     /** @var Api */
     private $apiModel;
@@ -38,20 +38,20 @@ class OrderSync
      * Constructor.
      *
      * @param LoggerInterface             $logger
-     * @param CollectionFactory           $orderCollection
+     * @param OrderFactory                $orderFactory
      * @param OrderResource               $orderResource
      * @param Api                         $apiModel
      * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         LoggerInterface $logger,
-        CollectionFactory $orderCollection,
+        OrderFactory $orderFactory,
         OrderResource $orderResource,
         Api $apiModel,
         CustomerRepositoryInterface $customerRepository
     ) {
         $this->logger = $logger;
-        $this->orderCollection = $orderCollection;
+        $this->orderFactory = $orderFactory;
         $this->orderResource = $orderResource;
         $this->apiModel = $apiModel;
         $this->customerRepository = $customerRepository;
@@ -75,7 +75,7 @@ class OrderSync
      */
     public function update()
     {
-        /** @var CollectionFactory $collection */
+        /** @var OrderFactory $collection */
         $collection = $this->getOrderCollection();
 
         /** @var Order $order */
@@ -105,7 +105,7 @@ class OrderSync
                 ]
             ];
 
-            if ($this->getApi()->synchroniseOrder($data)) {
+            if ($this->getApi()->synchronizeOrder($data)) {
                 $this->orderResource->getConnection()->update(
                     $this->orderResource->getTable('sales_order'),
                     ['smileio_synchronised_at' => date('Y-m-d H:i:s')],
@@ -120,11 +120,11 @@ class OrderSync
      * Get a collection of the orders that are updated after they're last
      * synced with Smile.io.
      *
-     * @return Collection
+     * @return OrderCollection
      */
-    private function getOrderCollection(): Collection
+    private function getOrderCollection(): OrderCollection
     {
-        $collection = $this->orderCollection->create();
+        $collection = $this->orderFactory->create();
         $collection->addFieldToFilter(
             'smileio_synchronised_at',
             [

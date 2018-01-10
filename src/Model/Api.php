@@ -47,7 +47,7 @@ class Api
      *
      * @return bool
      */
-    public function synchroniseCustomer(array $data): bool
+    public function synchronizeCustomer(array $data): bool
     {
         $content = $this->generateBody('customer/updated', $data);
 
@@ -61,7 +61,7 @@ class Api
      *
      * @return bool
      */
-    public function synchroniseOrder($data): bool
+    public function synchronizeOrder($data): bool
     {
         $content = $this->generateBody('order/updated', $data);
 
