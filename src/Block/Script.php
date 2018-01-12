@@ -41,9 +41,9 @@ class Script extends Template implements BlockInterface
      */
     public function isEnabled(): bool
     {
-        return $this->_scopeConfig->getValue(
-            'smile/settings/enabled',
-            ScopeInterface::SCOPE_STORE
+        return $this->_scopeConfig->isSetFlag(
+            ScopeInterface::SCOPE_STORE,
+            'smile/settings/enabled'
         );
     }
 

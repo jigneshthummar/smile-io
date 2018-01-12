@@ -67,7 +67,7 @@ class CustomerSync
      */
     public function update()
     {
-        /** @var CustomerFactory $collection */
+        /** @var CustomerCollection $collection */
         $collection = $this->getCustomerCollection();
 
         /** @var CustomerInterface $customer */

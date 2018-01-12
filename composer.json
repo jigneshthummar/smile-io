@@ -7,10 +7,6 @@
         {
             "type": "composer",
             "url": "https://repo.magento.com/"
-        },
-        {
-            "type": "composer",
-            "url": "https://composer.mediact.nl"
         }
     ],
     "require": {
@@ -52,7 +48,8 @@
             "/phpunit.xml",
             "/phpmd.xml",
             "/phpstan.neon",
-            "/phpcs.xml"
+            "/phpcs.xml",
+            "/.gitignore"
         ]
     },
     "require-dev": {
