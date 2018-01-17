@@ -13,6 +13,16 @@ use Magento\Store\Model\ScopeInterface;
  */
 class Script extends Template implements BlockInterface
 {
+    /**
+     * The config path under which the enabled setting is stored
+     */
+    const CONFIG_PATH_SMILE_SETTINGS_ENABLED = 'smile/settings/enabled';
+
+    /**
+     * The config path under which the private key is stored
+     */
+    const CONFIG_PATH_SMILE_SETTINGS_PRIVATE_KEY = 'smile/settings/private_key';
+
     /** @var Session */
     protected $customerSession;
 
@@ -42,8 +52,8 @@ class Script extends Template implements BlockInterface
     public function isEnabled(): bool
     {
         return $this->_scopeConfig->isSetFlag(
-            ScopeInterface::SCOPE_STORE,
-            'smile/settings/enabled'
+            self::CONFIG_PATH_SMILE_SETTINGS_ENABLED,
+            ScopeInterface::SCOPE_STORE
         );
     }
 
@@ -68,7 +78,7 @@ class Script extends Template implements BlockInterface
     {
         /** @var string $token */
         $token = $this->_scopeConfig->getValue(
-            'smile/settings/private_key',
+            self::CONFIG_PATH_SMILE_SETTINGS_PRIVATE_KEY,
             ScopeInterface::SCOPE_STORE
         );
 
