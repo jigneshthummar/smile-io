@@ -5,14 +5,14 @@ namespace Mediact\Smile\Setup;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Setup\CustomerSetup;
 use Magento\Customer\Setup\CustomerSetupFactory;
-use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
 
 /**
- * Class InstallData
+ * Class UpgradeData
  */
-class InstallData implements InstallDataInterface
+class UpgradeData implements UpgradeDataInterface
 {
     /**
      * Customer setup factory
@@ -40,7 +40,7 @@ class InstallData implements InstallDataInterface
      *
      * @return void
      */
-    public function install(
+    public function upgrade(
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context
     ) {

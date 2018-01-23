@@ -3,14 +3,14 @@
 namespace Mediact\Smile\Setup;
 
 use Magento\Framework\DB\Ddl\Table;
-use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\UpgradeSchemaInterface;
 
 /**
- * Class InstallSchema
+ * Class UpgradeSchema
  */
-class InstallSchema implements InstallSchemaInterface
+class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
      * Add column to the customer and order table for Smile.io
@@ -21,7 +21,7 @@ class InstallSchema implements InstallSchemaInterface
      *
      * @return void
      */
-    public function install(
+    public function upgrade(
         SchemaSetupInterface $setup,
         ModuleContextInterface $context
     ) {

@@ -60,9 +60,9 @@ class Script extends Template implements BlockInterface
     /**
      * Get the current customer ID
      *
-     * @return mixed
+     * @return int|null
      */
-    public function getCustomerId(): mixed
+    public function getCustomerId()
     {
         return $this->customerSession->getCustomerId();
     }
