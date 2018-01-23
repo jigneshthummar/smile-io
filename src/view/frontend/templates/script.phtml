@@ -10,11 +10,22 @@ use Mediact\Smile\Block\Script;
 
 /** @var Script $block */
 ?>
-<?php if ($block->isEnabled() && $block->getCustomerId()): ?>
-    <script async src="//cdn.sweettooth.io/assets/storefront.js" charset="utf-8"></script>
-    <div class="sweettooth-init"
-         data-channel-api-key="<?php echo $block->getToken(); ?>"
-         data-external-customer-id="<?php echo $block->getCustomerId(); ?>"
-         data-customer-auth-digest="<?php echo $block->getCustomerAuthDigest(); ?>">
-    </div>
-<?php endif;
+<div id="smile-io" data-bind="scope: 'smileio'">
+    <!-- ko if: customer().fullname  -->
+    <script type="text/x-magento-init">
+    {
+        "#smile-io": {
+            "Magento_Ui/js/core/app": {
+               "components": {
+                    "smileio": {
+                        "component": "Mediact_Smile/js/smile-io",
+                        "template" : "Mediact_Smile/smile-io"
+                    }
+                }
+            }
+        }
+    }
+    </script>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+</div>
